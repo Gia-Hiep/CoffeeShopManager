@@ -1,0 +1,128 @@
+﻿@page
+@model CoffeeShopManager.Pages.Orders.EditModel
+@{
+    ViewData["Title"] = "Edit Order";
+}
+
+<h4>Edit Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" id="editOrderForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Order.Id" />
+
+            <div class="form-group">
+                <label asp-for="Order.OrderDate" class="control-label"></label>
+                <input asp-for="Order.OrderDate" class="form-control" type="datetime-local" value="@Model.Order.OrderDate.ToString("yyyy-MM-ddTHH:mm")" />
+                <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Order.TableId" class="control-label"></label>
+                <select asp-for="Order.TableId" class="form-control" asp-items="ViewBag.TableId" required>
+                    <option value="">-- Select Table --</option>
+                </select>
+                <span asp-validation-for="Order.TableId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Order.EmployeeId" class="control-label"></label>
+                <select asp-for="Order.EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId" required>
+                    <option value="">-- Select Employee --</option>
+                </select>
+                <span asp-validation-for="Order.EmployeeId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Order.Status" class="control-label"></label>
+                <select asp-for="Order.Status" class="form-control">
+                    <option value="Pending">Pending</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+                <span asp-validation-for="Order.Status" class="text-danger"></span>
+            </div>
+
+            <h5>Order Items</h5>
+            <table class="table table-striped" id="orderDetailsTable">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OrderDetails.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <select asp-for="OrderDetails[i].ProductId" class="form-control product-select" asp-items="Model.Products">
+                                    <option value="">-- Select Product --</option>
+                                </select>
+                                <span asp-validation-for="OrderDetails[i].ProductId" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="OrderDetails[i].Quantity" type="number" class="form-control quantity-input" min="0" />
+                                <span asp-validation-for="OrderDetails[i].Quantity" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary mb-3" id="addRow">Add Item</button>
+
+            <div class="form-group">
+                <label asp-for="Order.TotalAmount" class="control-label"></label>
+                <p class="form-control-plaintext">@Model.Order.TotalAmount?.ToString("#,##0 VNĐ")</p>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Nút "Add Item": Thêm một dòng mới vào bảng
+        document.getElementById("addRow").onclick = function() {
+            var tableBody = document.getElementById("orderDetailsTable").getElementsByTagName("tbody")[0];
+            var rowNumber = tableBody.rows.length; // Đếm số dòng hiện có
+            var newRow = tableBody.insertRow(); // Thêm dòng mới
+            newRow.innerHTML = `
+                <td>
+                    <select name="OrderDetails[${rowNumber}].ProductId" class="form-control product-select">
+                        <option value="">-- Select Product --</option>
+        @foreach (var product in Model.Products)
+        {
+                                <option value="@product.Value">@product.Text</option>
+        }
+                    </select>
+                </td>
+                <td>
+                    <input name="OrderDetails[${rowNumber}].Quantity" type="number" class="form-control quantity-input" min="0" value="0" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">Remove</button>
+                </td>`;
+        };
+
+        // Nút "Remove": Xóa dòng khi nhấn nút "Remove"
+        document.getElementById("orderDetailsTable").onclick = function(event) {
+            if (event.target.className.includes("remove-row")) {
+                event.target.parentElement.parentElement.remove(); // Xóa dòng chứa nút "Remove"
+            }
+        };
+    </script>
+}

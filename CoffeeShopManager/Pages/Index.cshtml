@@ -1,0 +1,78 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row text-center">
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Sản phẩm</h5>
+                <p class="card-text">Quản lý danh sách sản phẩm trong quán.</p>
+                <a asp-page="/Products/Index" class="btn btn-primary">Quản lý</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Danh mục</h5>
+                <p class="card-text">Phân loại sản phẩm theo danh mục.</p>
+                <a asp-page="/Categories/Index" class="btn btn-secondary">Quản lý</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Đơn hàng</h5>
+                <p class="card-text">Xem và xử lý đơn hàng hiện tại.</p>
+                <a asp-page="/Orders/Index" class="btn btn-success">Xem đơn hàng</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Nhân viên</h5>
+                <p class="card-text">Quản lý thông tin nhân viên quán.</p>
+                <a asp-page="/Employees/Index" class="btn btn-info">Quản lý</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Bàn</h5>
+                <p class="card-text">Theo dõi tình trạng bàn phục vụ.</p>
+                <a asp-page="/Tables/Index" class="btn btn-dark">Xem bàn</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Báo cáo doanh thu</h5>
+                <p class="card-text">Xem tổng doanh thu và thống kê.</p>
+                <a asp-page="/Reports/RevenueReport" class="btn btn-warning">Xem báo cáo</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Ca làm việc</h5>
+                <p class="card-text">Quản lý lịch làm việc của nhân viên.</p>
+                <a asp-page="/Shifts/Index" class="btn btn-danger">Quản lý</a>
+            </div>
+        </div>
+    </div>
+    @* //@Html.Partial("_Menu") *@
+</div>

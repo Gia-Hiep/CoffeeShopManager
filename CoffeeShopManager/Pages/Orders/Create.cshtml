@@ -1,0 +1,141 @@
+﻿@page
+@model CoffeeShopManager.Pages.Orders.CreateModel
+@{
+    ViewData["Title"] = "Create Order";
+}
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <form method="post" id="createOrderForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="form-group">
+                <span class="text-danger">*</span>
+                <label asp-for="Order.OrderDate" class="control-label"></label>
+                <input asp-for="Order.OrderDate" class="form-control" type="datetime-local" readonly value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Order.TableId" class="control-label"></label>
+                <select asp-for="Order.TableId" class="form-control" asp-items="ViewBag.TableId" required>
+                    <option value="">-- Select Table --</option>
+                </select>
+                <span asp-validation-for="Order.TableId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Order.EmployeeId" class="control-label"></label>
+                <select asp-for="Order.EmployeeId" class="form-control" asp-items="ViewBag.EmployeeId" required>
+                    <option value="">-- Select Employee --</option>
+                </select>
+                <span asp-validation-for="Order.EmployeeId" class="text-danger"></span>
+            </div>
+
+            <h5>Chọn sản phẩm</h5>
+            <table class="table table-striped" id="orderDetailsTable">
+                <thead>
+                    <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.OrderDetails.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                <select asp-for="OrderDetails[i].ProductId" class="form-control product-select" asp-items="Model.Products">
+                                    <option value="">-- Chọn sản phẩm --</option>
+                                </select>
+                                <span asp-validation-for="OrderDetails[i].ProductId" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <input asp-for="OrderDetails[i].Quantity" type="number" class="form-control quantity-input" min="0" />
+                                <span asp-validation-for="OrderDetails[i].Quantity" class="text-danger"></span>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger btn-sm remove-row">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary mb-3" id="addRow">Thêm sản phẩm</button>
+
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('addRow').addEventListener('click', function () {
+            var table = document.getElementById('orderDetailsTable').getElementsByTagName('tbody')[0];
+            var rowCount = table.rows.length;
+            var row = table.insertRow();
+            row.innerHTML = `
+                <td>
+                    <select name="OrderDetails[${rowCount}].ProductId" class="form-control product-select">
+                        <option value="">-- Chọn sản phẩm --</option>
+        @foreach (var product in Model.Products)
+        {
+                                <option value="@product.Value">@product.Text</option>
+        }
+                    </select>
+                </td>
+                <td>
+                    <input name="OrderDetails[${rowCount}].Quantity" type="number" class="form-control quantity-input" min="0" value="0" />
+                </td>
+                <td>
+                    <button type="button" class="btn btn-danger btn-sm remove-row">Xóa</button>
+                </td>`;
+        });
+
+        document.addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-row')) { //kiểm tra xem phần từ được chọn có class remove-row ko
+                e.target.closest('tr').remove();
+            }
+        });
+
+        //validation and cleanup before submit
+        document.getElementById('createOrderForm').addEventListener('submit', function (e) {
+            var rows = document.querySelectorAll('#orderDetailsTable tbody tr');
+            var hasValidRow = false;
+
+            rows.forEach((row, index) => {
+                var productId = row.querySelector('.product-select').value;
+                var quantity = parseInt(row.querySelector('.quantity-input').value);
+
+                //Nếu dòng trống (ProductId = "" và Quantity <= 0), xóa dòng
+                if (!productId && quantity <= 0) {
+                    row.remove();
+                } else if (productId && quantity > 0) {
+                    hasValidRow = true;
+                }
+            });
+
+            //Cập nhật lại name attribute để binding đúng
+            rows = document.querySelectorAll('#orderDetailsTable tbody tr'); //Lấy lại danh sách dòng sau khi xóa
+            rows.forEach((row, index) => {
+                row.querySelector('.product-select').name = `OrderDetails[${index}].ProductId`;
+                row.querySelector('.quantity-input').name = `OrderDetails[${index}].Quantity`;
+            });
+
+            if (!hasValidRow) {
+                e.preventDefault();
+                alert('Vui lòng thêm ít nhất một sản phẩm với số lượng lớn hơn 0.');
+            }
+        });
+    </script>
+}

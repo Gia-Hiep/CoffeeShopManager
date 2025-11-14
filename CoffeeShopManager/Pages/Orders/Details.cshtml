@@ -1,0 +1,32 @@
+﻿@page
+@model CoffeeShopManager.Pages.Orders.DetailsModel
+
+<div>
+    <h5>Chi tiết đơn hàng</h5>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Sản phẩm</th>
+                <th>Số lượng</th>
+                <th>Đơn giá</th>
+                <th>Thành tiền</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var detail in Model.Order.OrderDetails)
+            {
+                <tr>
+                    <td>@detail.Product?.Name</td>
+                    <td>@detail.Quantity</td>
+                    <td>@detail.UnitPrice VNĐ</td>
+                    <td>@detail.Total VNĐ</td>
+                </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+<div>
+    <a asp-page="./Edit" asp-route-id="@Model.Order.Id">Edit</a> |
+    <a asp-page="./Index">Back to List</a>
+</div>

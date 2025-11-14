@@ -1,0 +1,100 @@
+﻿@page
+@model CoffeeShopManager.Pages.BillByTableModel
+@{
+    ViewData["Title"] = "Bill By Table";
+    if (!string.IsNullOrEmpty(Model.PaymentMessage))
+    {
+        ViewData["PaymentMessage"] = Model.PaymentMessage;
+        ViewData["IsSuccess"] = Model.PaymentSuccess;
+        ViewBag.PaymentMessage = Model.PaymentMessage;
+        ViewBag.IsSuccess = Model.PaymentSuccess;
+    }
+}
+
+<!-- VIEW DATA , VIEWBAG-->
+
+@Html.Partial("_PaymentMessage")
+
+    <!-- Model --> 
+@* @{ *@
+@*     var messageModel = !string.IsNullOrEmpty(Model.PaymentMessage)  *@
+@*     ? new PaymentMessageModel { Message = Model.PaymentMessage, IsSuccess = Model.PaymentSuccess }  *@
+@*     : null; *@
+@*     @Html.Partial("_PaymentMessageModel", messageModel)  *@
+@* } *@
+
+<h1>Bill By Table</h1>
+<hr />
+
+<div class="row">
+    <div class="col-md-8">
+        <form method="get">
+            <div class="form-group">
+                <label for="tableId" class="control-label">Select Table</label>
+                <select id="tableId" name="tableId" class="form-control" asp-items="Model.TableList" onchange="this.form.submit()">
+                    <option value="">-- Select Table --</option>
+                </select>
+            </div>
+        </form>
+
+        @if (Model.SelectedTableId > 0)
+        {
+            <h4 class="mt-4">Orders for Table @Model.SelectedTable?.TableNumber</h4>
+            @if (Model.Orders.Any())
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Order ID</th>
+                            <th>Order Date</th>
+                            <th>Employee</th>
+                            <th>Total Amount</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var order in Model.Orders)
+                        {
+                            <tr>
+                                <td>@order.Id</td>
+                                <td>@order.OrderDate.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>@order.Employee?.Name</td>
+                                <td>@order.TotalAmount? VNĐ</td>
+                                <td>
+                                    <span class="badge @(order.Status == "Pending" ? "bg-warning" : order.Status == "Completed" ? "bg-success" : "bg-danger")">
+                                        @order.Status
+                                    </span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <strong>Total Bill: </strong> @Model.TotalBill VNĐ)
+                </div>
+
+                <form method="post">
+                    <input type="hidden" name="tableId" value="@Model.SelectedTableId" />
+                    <button type="submit" class="btn btn-primary">Thanh toán</button>
+                    <a asp-page="/Bill/BillByTable" asp-page-handler="PrintBill" asp-route-tableId="@Model.SelectedTableId" class="btn btn-info">Print Bill</a>
+                </form>
+
+            }
+            else
+            {
+                <div class="alert alert-warning">
+                    No pending orders found for this table.
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<div class="mt-3">
+    <a asp-page="/Orders/Index">Back to Orders</a>
+</div>
+
+@section Scripts {
+    @Html.Partial("_ValidationScriptsPartial")
+}

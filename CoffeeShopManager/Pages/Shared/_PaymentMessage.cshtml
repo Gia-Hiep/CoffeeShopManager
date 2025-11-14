@@ -1,0 +1,15 @@
+﻿<!-- Hiển thị dữ liệu từ ViewData -->
+@if (ViewData["PaymentMessage"] != null)
+{
+    <div class="alert alert-success" role="alert">
+        @ViewData["PaymentMessage"]
+    </div>
+}
+
+@* <!-- Hiển thị dữ liệu từ ViewBag --> *@
+@* @if (ViewBag.PaymentMessage != null) *@
+@* { *@
+@*     <div class="alert @(ViewBag.IsSuccess == true ? "alert-success" : "alert-danger")" role="alert"> *@
+@*         @ViewBag.PaymentMessage *@
+@*     </div> *@
+@* } *@

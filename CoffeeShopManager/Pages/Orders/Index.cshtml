@@ -1,0 +1,77 @@
+﻿@page
+@model CoffeeShopManager.Pages.Orders.IndexModel
+@{
+    ViewData["Title"] = "Orders";
+}
+
+<h1>Orders</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</p>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Table)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Employee)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].TotalAmount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Order[0].Status)
+            </th>
+            <th>Actions</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Order)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Table.TableNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Employee.Name)
+                </td>
+                <td>
+                    @item.TotalAmount VNĐ
+                </td>
+                <td>
+                    <span class="badge @(item.Status == "Pending" ? "bg-warning" : item.Status == "Completed" ? "bg-success" : "bg-danger")">
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </span>
+                </td>
+                <td>
+                    @if (item.Status == "Pending")
+                    {
+                        <form method="post" asp-page-handler="CompleteOrder" style="display:inline;">
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <button type="submit" class="btn btn-success btn-sm">Lên món</button>
+                        </form>
+                    }
+                    else if (item.Status == "Completed")
+                    {
+                        <span class="text-muted">Đã lên món</span>
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
