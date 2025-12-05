@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShopManager.Data;
 using CoffeeShopManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoffeeShopManager.Pages.Categories
 {
+    [Authorize(Roles = "Admin")]
     public class DeleteModel : PageModel
     {
         private readonly CoffeeShopManager.Data.ApplicationDbContext _context;

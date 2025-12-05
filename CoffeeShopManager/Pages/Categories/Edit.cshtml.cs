@@ -8,9 +8,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using CoffeeShopManager.Data;
 using CoffeeShopManager.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CoffeeShopManager.Pages.Categories
 {
+    [Authorize(Roles = "Admin")]
     public class EditModel : PageModel
     {
         private readonly CoffeeShopManager.Data.ApplicationDbContext _context;

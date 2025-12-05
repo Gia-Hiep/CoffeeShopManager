@@ -11,10 +11,11 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.AspNetCore.Identity.UI.UIFrameworkAttribute("Bootstrap5")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("CoffeeShopManager")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b27d6267014d900e4c4be72dbc0bedcd6fda241f")]
 [assembly: System.Reflection.AssemblyProductAttribute("CoffeeShopManager")]
 [assembly: System.Reflection.AssemblyTitleAttribute("CoffeeShopManager")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

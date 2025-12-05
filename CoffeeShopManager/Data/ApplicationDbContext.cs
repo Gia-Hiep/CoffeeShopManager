@@ -1,25 +1,30 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using CoffeeShopManager.Models;
 
 namespace CoffeeShopManager.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Category> Categories { get; set; }
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Order> Orders { get; set; }
-        public DbSet<OrderDetail> OrderDetails { get; set; }
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Table> Tables { get; set; }
-        public DbSet<Shift> Shifts { get; set; }
+        // Các DbSet – thêm ! để không bị warning nullable
+        public DbSet<Category> Categories { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
+        public DbSet<Order> Orders { get; set; } = null!;
+        public DbSet<OrderDetail> OrderDetails { get; set; } = null!;
+        public DbSet<Employee> Employees { get; set; } = null!;
+        public DbSet<Table> Tables { get; set; } = null!;
+        public DbSet<Shift> Shifts { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configure relationships and constraints
+            // BẮT BUỘC phải có dòng này để Identity tạo khóa chính
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Order>()
                 .HasOne(o => o.Table)
                 .WithMany()
@@ -49,6 +54,17 @@ namespace CoffeeShopManager.Data
                 .HasOne(s => s.Employee)
                 .WithMany(e => e.Shifts)
                 .HasForeignKey(s => s.EmployeeId);
+            modelBuilder.Entity<Order>()
+    .Property(o => o.TotalAmount)
+    .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<OrderDetail>()
+                .Property(od => od.UnitPrice)
+                .HasColumnType("decimal(18,2)");
+
+            modelBuilder.Entity<Product>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(18,2)");
         }
     }
 }

@@ -17,6 +17,21 @@
                     <img src="~/images/logo.png" alt="Coffee Shop Logo" style="height: 40px; margin-right: 10px;" />
                     Coffee Shop Manager
                 </a>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <li class="nav-item">
+                        <span class="navbar-text me-3">Xin chào, @User.Identity.Name</span>
+                        <form asp-page="/Account/Logout" asp-area="Identity" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Đăng xuất</button>
+                        </form>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Login">Đăng nhập</a>
+                    </li>
+                }
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
